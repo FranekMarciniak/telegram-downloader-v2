@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   telegram-downloader:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: prostyfranek/telegram-downloader-v2:latest
     container_name: telegram-downloader-v2
     restart: unless-stopped
     ports:

@@ -106,7 +106,7 @@ export class YtDlAdapterService implements SocialMediaDownloader {
       throw new Error(errorMessage);
     }
 
-    const command = `yt-dlp "${url}" -o "${filePath}" --no-playlist`;
+    const command = `yt-dlp "${url}" -o "${filePath}" --no-playlist -S res,ext:mp4:m4a --recode mp4`;
     this.logger.debug(`Executing command: ${command}`);
 
     try {
