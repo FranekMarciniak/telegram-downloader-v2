@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  telegram-downloader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telegram-downloader-v2
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Telegram Bot Configuration (set these in .env file)
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      # Download Configuration
+      - DOWNLOAD_PATH=/tmp/downloads
+      - MAX_FILE_SIZE_MB=100
+    volumes:
+      # Mount download directory for persistent storage
+      - downloads:/tmp/downloads
+      # Optional: Mount config for custom yt-dlp configuration
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    # Security
+    security_opt:
+      - no-new-privileges:true
+    read_only: false # Need write access for downloads
+    tmpfs:
+      - /tmp:noexec,nosuid,size=500m
+    networks:
+      - telegram-downloader-network
+
+networks:
+  telegram-downloader-network:
+    driver: bridge
+
+volumes:
+  downloads:
+    driver: local 
