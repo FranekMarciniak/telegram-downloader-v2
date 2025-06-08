@@ -135,7 +135,6 @@ The CI/CD pipeline automatically triggers on:
 
 - ✅ **Runs tests** before building
 - ✅ **Multi-platform builds** (AMD64 + ARM64)
-- ✅ **Security scanning** with Trivy
 - ✅ **Auto-updates** Docker Hub description
 - ✅ **Build caching** for faster builds
 - ✅ **Semantic versioning** support
@@ -213,14 +212,6 @@ Use Docker Hub access tokens instead of passwords:
 1. Go to [Docker Hub Security Settings](https://hub.docker.com/settings/security)
 2. Create new access token with Read, Write, Delete permissions
 3. Use token as `DOCKER_PASSWORD` secret
-
-### Image Scanning
-
-Images are automatically scanned for vulnerabilities:
-
-- **Trivy scanner** runs on every build
-- **Results uploaded** to GitHub Security tab
-- **Critical vulnerabilities** will fail the build
 
 ### Security Best Practices
 
