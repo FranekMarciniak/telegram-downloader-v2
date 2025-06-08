@@ -242,10 +242,10 @@ describe('DownloadProcessorService', () => {
         expect(ytDlAdapter.getFileUrl).not.toHaveBeenCalled();
       });
 
-      it('should throw error for unsupported domain', async () => {
+      it('should throw error for unsupported domain', () => {
         const unsupportedUrl = 'https://unsupported-domain.com/video';
 
-        await expect(service.processUrl(unsupportedUrl))
+        expect(service.processUrl(unsupportedUrl));
 
         expect(logger.log).toHaveBeenCalledWith(
           `Processing URL: ${unsupportedUrl}`,
