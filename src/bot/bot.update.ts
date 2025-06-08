@@ -21,8 +21,6 @@ export class BotUpdate {
       const messageId = ctx.message.message_id;
       const messageText = ctx.message.text;
 
-      this.logger.log(`Received message: ${messageText.substring(0, 100)}...`);
-
       const url = this.extractUrl(messageText);
       if (!url) {
         return;
@@ -30,8 +28,15 @@ export class BotUpdate {
 
       this.logger.log(`Processing URL: ${url}`);
 
-      const { urls, type } =
+      const downloadResult =
         await this.downloadProcessorService.processUrl(url);
+
+      if (!downloadResult) {
+        this.logger.warn(`No suitable downloader found for URL: ${url}`);
+        return;
+      }
+
+      const { urls, type } = downloadResult;
 
       if (type === 'local') {
         for (let index = 0; index < urls.length; index++) {

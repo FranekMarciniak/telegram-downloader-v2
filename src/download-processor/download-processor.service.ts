@@ -32,7 +32,7 @@ export class DownloadProcessorService {
     ]);
   }
 
-  async processUrl(url: string): Promise<DownloadResultDto> {
+  async processUrl(url: string): Promise<DownloadResultDto | null> {
     this.logger.log(`Processing URL: ${url}`);
 
     try {
@@ -41,8 +41,8 @@ export class DownloadProcessorService {
       const downloader = this.getDownloader(url);
       if (!downloader) {
         const error = new Error(`No suitable downloader found for URL: ${url}`);
-        this.logger.error(error.message);
-        throw error;
+        this.logger.warn(error.message);
+        return null;
       }
 
       const downloadData = await downloader.getFileUrl(url);

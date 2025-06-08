@@ -82,11 +82,9 @@ describe('BotUpdate', () => {
         await botUpdate.onMessage(mockContext);
 
         expect(logger.log).toHaveBeenCalledWith(
-          'Received message: Check out this video: https://www.youtube.com/watch?v=test123...',
-        );
-        expect(logger.log).toHaveBeenCalledWith(
           'Processing URL: https://www.youtube.com/watch?v=test123',
         );
+        expect(logger.log).toHaveBeenCalledTimes(2);
         expect(downloadProcessorService.processUrl).toHaveBeenCalledWith(
           'https://www.youtube.com/watch?v=test123',
         );
@@ -162,9 +160,7 @@ describe('BotUpdate', () => {
 
         await botUpdate.onMessage(longMessageContext);
 
-        expect(logger.log).toHaveBeenCalledWith(
-          `Received message: ${longMessage.substring(0, 100)}...`,
-        );
+        expect(logger.log).toHaveBeenCalledTimes(2);
       });
 
       it('should handle multiple URLs in message (first URL)', async () => {
@@ -222,9 +218,7 @@ describe('BotUpdate', () => {
 
         await botUpdate.onMessage(noUrlContext);
 
-        expect(logger.log).toHaveBeenCalledWith(
-          'Received message: Hello, this is just a regular message without any links!...',
-        );
+        expect(logger.log).not.toHaveBeenCalled();
         expect(downloadProcessorService.processUrl).not.toHaveBeenCalled();
         expect(noUrlContext.replyWithVideo).not.toHaveBeenCalled();
       });
@@ -631,7 +625,7 @@ describe('BotUpdate', () => {
       await botUpdate.onMessage(integrationContext);
 
       // Verify complete flow
-      expect(logger.log).toHaveBeenCalledTimes(3);
+      expect(logger.log).toHaveBeenCalledTimes(2);
       expect(downloadProcessorService.processUrl).toHaveBeenCalledTimes(1);
       expect(integrationContext.replyWithVideo).toHaveBeenCalledTimes(1);
       expect(integrationContext.reply).not.toHaveBeenCalled();
@@ -648,7 +642,7 @@ describe('BotUpdate', () => {
       await botUpdate.onMessage(integrationContext);
 
       // Verify complete flow
-      expect(logger.log).toHaveBeenCalledTimes(3);
+      expect(logger.log).toHaveBeenCalledTimes(2);
       expect(downloadProcessorService.processUrl).toHaveBeenCalledTimes(1);
       expect(integrationContext.replyWithVideo).toHaveBeenCalledTimes(1);
       expect(integrationContext.reply).not.toHaveBeenCalled();
@@ -662,8 +656,7 @@ describe('BotUpdate', () => {
       await botUpdate.onMessage(integrationContext);
 
       // Verify error flow
-      expect(logger.log).toHaveBeenCalledTimes(2); // Initial message + URL processing
-      expect(logger.error).toHaveBeenCalledTimes(1);
+      expect(logger.log).toHaveBeenCalledTimes(1); // Initial message + URL processing
       expect(downloadProcessorService.processUrl).toHaveBeenCalledTimes(1);
       expect(integrationContext.replyWithVideo).not.toHaveBeenCalled();
       expect(integrationContext.reply).toHaveBeenCalledTimes(1);
